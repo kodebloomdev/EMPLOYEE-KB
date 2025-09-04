@@ -8,6 +8,7 @@ import EmployeeDashboard from "./pages/EmployeeDashboard";
 import PrivateRoute from "./utils/PrivateRoute";
 import Layout from "./components/Layout"; // new wrapper
 import Footer from "./components/Footer";
+import EmployeeAdd from "./pages/director/EmployeeADD";
 
 function App() {
   return (
