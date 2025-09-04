@@ -4,8 +4,6 @@ const ProfileCard = () => {
    console.log(localStorage.getItem("users"))
   return (
     <div className="bg-white rounded-xl shadow-md p-5 mb-6 grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 items-center">
-      {
-        users.role == "Director" ?
       <div className="profile-image-large w-32 h-32 bg-gradient-to-r from-blue-900 to-blue-700 rounded-full flex items-center justify-center text-white text-4xl font-bold border-4 border-blue-50 shadow-lg mx-auto">
         JD
       </div>:
