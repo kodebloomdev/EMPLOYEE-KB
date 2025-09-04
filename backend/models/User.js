@@ -1,10 +1,24 @@
-import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-  name: String,
-  email: { type: String, unique: true },
-  password: String,   // stored as plain text (not secure in real apps)
-  role: String
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
+
+const UserSchema = new mongoose.Schema({
+  name: { type: String },
+  email: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['DIRECTOR', 'HR', 'PM', 'EMPLOYEE'], required: true },
+  employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' } // for EMPLOYEE users
+}, { timestamps: true });
+
+UserSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) return next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
 });
 
-export default mongoose.model("User", userSchema);
+UserSchema.methods.comparePassword = async function(candidate) {
+  return bcrypt.compare(candidate, this.password);
+};
+
+export default mongoose.model('User', UserSchema);

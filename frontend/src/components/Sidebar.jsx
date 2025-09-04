@@ -9,7 +9,7 @@ import {
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 /**
  * Props
@@ -67,11 +67,13 @@ const Sidebar = ({
       {/* MAIN NAV */}
       <Title>Main Navigation</Title>
       <Item icon={FaHome} label="Dashboard" active={activeKey === "dashboard"} />
+      <NavLink to="/director/create-employee" className="w-full text-left">
       <Item
         icon={FaUserPlus}
         label="Create Employee"
         active={activeKey === "create"}
       />
+      </NavLink>
       <Item icon={FaUsers} label="Manage Team" active={activeKey === "team"} />
 
       {/* REPORTS */}

@@ -27,6 +27,13 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/director/create-employee" element={
+          <PrivateRoute role="Director">
+            <Layout>
+              <EmployeeADD />
+            </Layout>
+          </PrivateRoute>
+        } />
         <Route
           path="/projectmanager"
           element={
