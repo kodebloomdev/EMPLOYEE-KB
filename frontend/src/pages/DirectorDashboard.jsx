@@ -53,7 +53,6 @@
 // export default DirectorDashboard;
 
 import Header from "../components/Header";
-import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import ProfileCard from "../components/ProfileCard";
 import QuickActions from "../components/QuickActions";

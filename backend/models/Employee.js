@@ -1,20 +1,26 @@
+import mongoose from "mongoose";
 
-import mongoose from 'mongoose';
-
-const EmployeeSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  dob: { type: Date },
-  contactNumber: { type: String },
-  email: { type: String, required: true },
-  employeeId: { type: String, required: true, unique: true },
-  designation: { 
-    type: String,
-    enum: ['Trainee Engineer','Junior Engineer','Engineer','Senior Engineer','Lead Engineer','Assistant Engineer','Manager'],
-    required: true
+const employeeSchema = new mongoose.Schema(
+  {
+    employeeId: { type: String, unique: true }, // 👈 added
+    name: { type: String, required: true },
+    dob: { type: Date, required: true },
+    email: { type: String, required: true, unique: true },
+    
+    role: {
+      type: String,
+      enum: ["employee", "manager", "hr", "director"],
+      default: "employee",
+    },
+    position: { type: String },
+    department: { type: String },
+    salary: { type: Number },
+    mobile: { type: String },
+    status: { type: String, enum: ["Active", "InActive"], default: "Active" },
+    photo: { type: String },
   },
-  assignedManager: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // PM
-  assignedHR: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // HR
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } // link when HR creates credentials
-}, { timestamps: true });
+  { timestamps: true }
+);
 
-export default mongoose.model('Employee', EmployeeSchema);
+const Employee = mongoose.model("Employee", employeeSchema);
+export default Employee;

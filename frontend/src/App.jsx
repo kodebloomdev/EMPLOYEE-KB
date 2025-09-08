@@ -31,7 +31,7 @@ function App() {
         <Route path="/director/create-employee" element={
           <PrivateRoute role="Director">
             <Layout>
-              <EmployeeADD />
+              <EmployeeAdd/>
             </Layout>
           </PrivateRoute>
         } />
