@@ -1,4 +1,4 @@
-import React from 'react';
+/*import React from 'react';
 import api from '../../api.js';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -99,3 +99,23 @@ function HREmployeeCard({ empId, onCreate }) {
     </div>
   );
 }
+*/
+import React from "react";
+
+const HrWelcomePage = () => {
+  return (
+    <div className="bg-white shadow-md rounded-xl p-6 border border-blue-200 mt-4">
+      <h1 className="text-3xl font-bold text-blue-700">
+        Welcome to the HR Dashboard
+      </h1>
+      <p className="mt-3 text-gray-600 leading-relaxed">
+        Here you can manage employee records, view notifications,
+        and perform HR-related tasks.
+      </p>
+    </div>
+  );
+};
+
+export default HrWelcomePage;
+
+

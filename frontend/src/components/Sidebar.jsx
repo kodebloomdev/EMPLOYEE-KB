@@ -11,13 +11,6 @@ import {
 } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 
-/**
- * Props
- * - isOpen: boolean (for mobile slide-in; optional)
- * - isCollapsed: boolean (16px rail vs 64px full)
- * - toggleCollapse: () => void
- * - activeKey: string ("dashboard" | "create" | "team" | "perf" | "fin" | "settings")
- */
 const Sidebar = ({
   isOpen = true,
   isCollapsed = false,
@@ -26,7 +19,10 @@ const Sidebar = ({
 }) => {
   const navigate = useNavigate();
 
-  // helper to style active vs hover like your CSS
+  // ✅ Get current user role
+  const storedUser = JSON.parse(localStorage.getItem("users"));
+  const role = storedUser?.role || "Guest";
+
   const itemClass = (active) =>
     `flex items-center gap-3 px-5 py-3 text-gray-800 transition-all duration-300 
      border-l-4 ${
@@ -45,7 +41,7 @@ const Sidebar = ({
     </div>
   );
 
-  const handlelogout = () => {
+  const handleLogout = () => {
     localStorage.removeItem("users");
     navigate("/");
   };
@@ -66,38 +62,54 @@ const Sidebar = ({
     >
       {/* MAIN NAV */}
       <Title>Main Navigation</Title>
-      <Item icon={FaHome} label="Dashboard" active={activeKey === "dashboard"} />
-      <NavLink to="/director/create-employee" className="w-full text-left">
-      <Item
-        icon={FaUserPlus}
-        label="Create Employee"
-        active={activeKey === "create"}
-      />
-      </NavLink>
-      <Item icon={FaUsers} label="Manage Team" active={activeKey === "team"} />
 
-      {/* REPORTS */}
-      <Title>Reports</Title>
-      <Item
-        icon={FaChartBar}
-        label="Performance"
-        active={activeKey === "perf"}
-      />
-      <Item
-        icon={FaMoneyBillWave}
-        label="Financials"
-        active={activeKey === "fin"}
-      />
+      {/* Always visible */}
+      <div className="mt-6">
+        <Item icon={FaHome} label="Dashboard" active={activeKey === "dashboard"} />
+      </div>
+
+      {/* ✅ Role-specific sections */}
+      {role === "Director" && (
+        <>
+          <NavLink to="/director/create-employee" className="w-full text-left">
+            <Item icon={FaUserPlus} label="Create Employee" active={activeKey === "create"} />
+          </NavLink>
+          <Item icon={FaUsers} label="Manage Team" active={activeKey === "team"} />
+          <Title>Reports</Title>
+          <Item icon={FaChartBar} label="Performance" active={activeKey === "perf"} />
+          <Item icon={FaMoneyBillWave} label="Financials" active={activeKey === "fin"} />
+        </>
+      )}
+
+      {role === "HR" && (
+        <>
+          <NavLink to="/hr/add-credentials" className="w-full text-left">
+            <Item icon={FaUserPlus} label="Add Credentials" active={activeKey === "create"} />
+          </NavLink>
+          <Item icon={FaUsers} label="Employee Records" active={activeKey === "team"} />
+        </>
+      )}
+
+      {role === "ProjectManager" && (
+        <>
+          <Item icon={FaUsers} label="My Team" active={activeKey === "team"} />
+          <Item icon={FaChartBar} label="Project Reports" active={activeKey === "perf"} />
+        </>
+      )}
+
+      {role === "Employee" && (
+        <>
+          <Item icon={FaUsers} label="My Profile" active={activeKey === "team"} />
+          <Item icon={FaChartBar} label="My Performance" active={activeKey === "perf"} />
+        </>
+      )}
 
       {/* SETTINGS */}
       <Title>Settings</Title>
-      <Item
-        icon={FaCog}
-        label="Account Settings"
-        active={activeKey === "settings"}
-      />
+      <Item icon={FaCog} label="Account Settings" active={activeKey === "settings"} />
 
-      <button onClick={handlelogout} className="w-full text-left">
+      {/* LOGOUT */}
+      <button onClick={handleLogout} className="w-full text-left">
         <Item icon={FaSignOutAlt} label="Logout" active={false} />
       </button>
 

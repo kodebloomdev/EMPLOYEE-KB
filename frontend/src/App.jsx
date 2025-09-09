@@ -3,13 +3,14 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Signin from "./auth/Signin";
 import DirectorDashboard from "./pages/DirectorDashboard";
 import ProjectManagerDashboard from "./pages/ProjectManagerDashboard";
-import HrDashboard from "./pages/HrDashboard";
+import HrDashboard from "./pages/hr/HrDashboard";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
 import PrivateRoute from "./utils/PrivateRoute";
 import Layout from "./components/Layout"; // new wrapper
 import Footer from "./components/Footer";
 import EmployeeAdd from "./pages/director/EmployeeADD";
-
+import AddEmployeeCredentials from "./pages/hr/AddEmployeeCredentials";
+import Credentials from "./pages/hr/credentials";
 function App() {
   return (
     <Router>
@@ -51,6 +52,26 @@ function App() {
             <PrivateRoute role="HR">
               <Layout>
                 <HrDashboard />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/hr/add-credentials"
+          element={
+            <PrivateRoute role="HR">
+              <Layout>
+                <AddEmployeeCredentials />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route 
+          path="/hr/credentials"
+          element={
+            <PrivateRoute role="HR">
+              <Layout>
+                <Credentials />
               </Layout>
             </PrivateRoute>
           }
