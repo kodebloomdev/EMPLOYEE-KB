@@ -9,6 +9,8 @@ import PrivateRoute from "./utils/PrivateRoute";
 import Layout from "./components/Layout"; // new wrapper
 import Footer from "./components/Footer";
 import EmployeeAdd from "./pages/director/EmployeeADD";
+import HRDashboard from "./pages/hr/Dashboard";
+import PMDashboard from "./pages/pm/Dashboard";
 
 function App() {
   return (
@@ -50,7 +52,7 @@ function App() {
           element={
             <PrivateRoute role="HR">
               <Layout>
-                <HrDashboard />
+                <HRDashboard />
               </Layout>
             </PrivateRoute>
           }
