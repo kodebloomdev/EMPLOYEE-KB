@@ -12,7 +12,6 @@ const employeeSchema = new mongoose.Schema(
       enum: ["employee", "manager", "hr", "director"],
       default: "employee",
     },
-    assigned_hr: { type: String, default: null },
     position: { type: String },
     department: { type: String },
     salary: { type: Number },

@@ -47,8 +47,11 @@ function EmployeeADD() {
 
   const handleTabChange = (role) => {
     setActiveTab(role);
+    setFormData({role:role})
     filterByRole(role);
     setSearchTerm("");
+    
+
   };
 
   const handleSearch = (e) => {
@@ -67,7 +70,9 @@ function EmployeeADD() {
   };
 
   const handleChange = (e) => {
+    
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    
   };
 
   const handleFileChange = (e) => {
@@ -80,26 +85,38 @@ function EmployeeADD() {
     reader.readAsDataURL(file);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (editingEmployee) {
-        await axios.put(
-          `http://localhost:5000/api/employees/${editingEmployee._id}`,
-          formData
-        );
-      } else {
-        await axios.post("http://localhost:5000/api/employees", formData);
-      }
-      setIsModalOpen(false);
-      setEditingEmployee(null);
-      fetchEmployees();
-      resetForm();
-      alert("Data Saved Successfully");
-    } catch (err) {
-      console.error("Error saving employee", err);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    let employeeRes;
+
+    if (editingEmployee) {
+      // Update existing employee
+      employeeRes = await axios.put(
+        `http://localhost:5000/api/employees/${editingEmployee._id}`,
+        formData
+      );
+    } else {
+      // Create new employee
+      employeeRes = await axios.post(
+        "http://localhost:5000/api/employees",
+        formData
+      );
+
+      // ✅ Send notification using the new employee _id
+      
     }
-  };
+
+    setIsModalOpen(false);
+    setEditingEmployee(null);
+    fetchEmployees();
+    resetForm();
+    alert("Data Saved Successfully");
+  } catch (err) {
+    console.error("Error saving employee", err);
+  }
+};
 
   const handleEdit = (employee) => {
     setEditingEmployee(employee);
@@ -107,7 +124,7 @@ function EmployeeADD() {
       name: employee.name || "",
       dob: employee.dob ? employee.dob.split("T")[0] : "",
       email: employee.email || "",
-      role: employee.role || "employee",
+      role: activeTab || "",
       position: employee.position || "",
       department: employee.department || "",
       salary: employee.salary || "",
@@ -133,9 +150,9 @@ function EmployeeADD() {
     setFormData({
       employeeId: "",
       name: "",
+      role: activeTab,
       dob: "",
       email: "",
-      role: activeTab, // ✅ auto-select based on tab
       position: "",
       department: "",
       salary: "",
@@ -159,8 +176,8 @@ function EmployeeADD() {
         Id: emp.Id,
         Name: emp.name,
         DOB: emp.dob ? new Date(emp.dob).toLocaleDateString() : "",
+        role: emp.role,
         Email: emp.email,
-        Role: emp.role,
         Position: emp.position,
         Department: emp.department,
         Salary: emp.salary,
@@ -377,27 +394,6 @@ function EmployeeADD() {
                 className="w-full border p-2 rounded"
                 required
               />
-
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-              >
-                <option value="employee">Employee</option>
-                <option value="manager">Manager</option>
-                <option value="hr">HR</option>
-                <option value="director">Director</option>
-              </select>
-              {formData.role !== "hr" && formData.role !== "director" && (
-             <input
-               name="assigned_hr"
-               value={formData.assigned_hr || ""}
-               onChange={handleChange}
-               placeholder="Assigned HR"
-                className="w-full border p-2 rounded"
-                />
-              )}
 
               <input
                 name="position"

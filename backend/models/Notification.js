@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 
 const NotificationSchema = new mongoose.Schema({
-  to: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  to: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee', required: false },
   title: { type: String, required: true },
   body: { type: String },
   data: { type: Object },

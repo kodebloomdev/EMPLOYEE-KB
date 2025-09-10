@@ -1,5 +1,6 @@
 // backend/controllers/employeeController.js
 import Employee from "../models/Employee.js";
+import Notification from "../models/Notification.js";
 
 // ✅ GET /api/employees - fetch all employees
 export const getEmployees = async (req, res) => {
@@ -55,6 +56,18 @@ export const createEmployee = async (req, res) => {
     console.log("👉 Normalized payload:", payload);
 
     const created = await Employee.create(payload);
+    try {
+  await Notification.create({
+    to: created._id, // send to the newly created employee
+    title: "New Employee Added",
+    body: `Employee ${name} has been added.`,
+    data: { employeeId, name, role, department, email, mobile, position, salary, status, dob, photo },
+  });
+  console.log("✅ Notification created");
+} catch (err) {
+  console.error("❌ Notification creation failed:", err);
+}
+
     console.log("✅ Employee created:", created);
 
     res.status(201).json(created);
