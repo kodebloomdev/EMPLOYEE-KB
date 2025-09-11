@@ -46,7 +46,7 @@ export const signin = async (req, res) => {
 export const credentialsSent = async (req, res) => {
   try {
     const { id } = req.params; // employeeId from URL
-    const { email, password } = req.body;
+    const { email, password ,role} = req.body;
 
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password are required" });
@@ -70,7 +70,7 @@ export const credentialsSent = async (req, res) => {
       name: employeeDoc.name,
       email,
       password, // plain text
-      role: "Employee",
+      role,
       employee: employeeDoc._id,
     });
 

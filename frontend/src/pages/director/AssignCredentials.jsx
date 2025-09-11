@@ -28,7 +28,7 @@ const AssignCredentials = () => {
       // ✅ Assign credentials
       await axios.post(
         `http://localhost:5000/api/auth/credentials/${employeeId}`,
-        { email: hrData.email, password }
+        { email: hrData.email, password , role: "HR" }
       );
 
       alert(`Credentials assigned to ${hrData.name}`);

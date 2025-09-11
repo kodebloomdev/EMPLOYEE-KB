@@ -34,7 +34,7 @@ console.log("Employee Data:", username, password);
       // ✅ Send credentials to backend
    const res = await axios.post(
   `http://localhost:5000/api/auth/credentials/${employee.data.employeeId}`,
-  { email:username , password }
+  { email:username , password ,role: "Employee"}
 );
 
 
