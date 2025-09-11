@@ -11,6 +11,9 @@ import Footer from "./components/Footer";
 import EmployeeAdd from "./pages/director/EmployeeADD";
 import AddEmployeeCredentials from "./pages/hr/AddEmployeeCredentials";
 import Credentials from "./pages/hr/credentials";
+import HrCredentialsAdd from "./pages/director/HrCredentialsAdd";
+import AssignCredentials from "./pages/director/AssignCredentials";
+import EmployeeDetails from "./pages/hr/employeeDetails";
 function App() {
   return (
     <Router>
@@ -37,6 +40,20 @@ function App() {
           </PrivateRoute>
         } />
        
+       <Route path="/director/HrCredentials" element={
+          <PrivateRoute role="Director">
+            <Layout>
+              <HrCredentialsAdd/>
+            </Layout>
+          </PrivateRoute>
+        } />
+        <Route path="/director/assign-credentials/:employeeId" element={
+          <PrivateRoute role="Director">
+            <Layout>
+              <AssignCredentials/>
+            </Layout>
+          </PrivateRoute>
+        } />
         <Route
           path="/projectmanager"
           element={
@@ -67,6 +84,16 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route 
+          path="/hr/employee-records"
+          element={
+            <PrivateRoute role="HR">
+              <Layout>
+                <EmployeeDetails />
+              </Layout>
+            </PrivateRoute>
+          }
+        />  
         <Route 
           path="/hr/credentials"
           element={

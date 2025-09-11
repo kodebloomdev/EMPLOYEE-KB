@@ -11,10 +11,9 @@ const Header = ({ toggleSidebar }) => {
   const [user, setUser] = useState({ name: "", role: "" });
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const navigate = useNavigate();
+  
   const notificationRef = useRef(null);
-
   useEffect(() => {
     const now = new Date();
     setLastLoginTime(
@@ -108,25 +107,33 @@ const Header = ({ toggleSidebar }) => {
                 </button>
               </div>
 
-              <div className="max-h-60 overflow-y-auto">
-                {notifications.map((notification) => (
-                  <button
-                    key={notification._id}
-                    onClick={() => {
-                      if (user.role === "HR") {
-                        navigate("/hr/credentials", { state: { employee: notification.data, empId: notification._id } });
-                      }
-                    }}
-                    className="w-full text-left border-b border-gray-100 last:border-b-0 p-3 hover:bg-gray-50 cursor-pointer"
-                  >
-                    <p className="text-gray-800 font-semibold">{notification.title}</p>
-                    <p className="text-gray-600 text-sm mt-1">{notification.body}</p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      {new Date(notification.createdAt).toLocaleString()}
-                    </p>
-                  </button>
-                ))}
-              </div>
+             <div className="max-h-60 overflow-y-auto">
+  {notifications.map((notification) => (
+    <button
+      key={notification._id}
+      onClick={() => {
+        console.log("Clicked notification:", notification); // ✅ logs full notification object
+
+        if (user.role === "HR") {
+          navigate("/hr/credentials", {
+            state: {
+              employee: notification, // send full notification object
+              empId: notification._id // notification ID if needed
+            }
+          });
+        }
+      }}
+      className="w-full text-left border-b border-gray-100 last:border-b-0 p-3 hover:bg-gray-50 cursor-pointer"
+    >
+      <p className="text-gray-800 font-semibold">{notification.title}</p>
+      <p className="text-gray-600 text-sm mt-1">{notification.body}</p>
+      <p className="text-xs text-gray-400 mt-1">
+        {new Date(notification.createdAt).toLocaleString()}
+      </p>
+    </button>
+  ))}
+</div>
+
 
               <div className="p-2 text-center bg-gray-100">
                 <button className="text-blue-900 text-sm hover:text-blue-900">View All Notifications</button>

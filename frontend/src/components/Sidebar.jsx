@@ -74,6 +74,9 @@ const Sidebar = ({
           <NavLink to="/director/create-employee" className="w-full text-left">
             <Item icon={FaUserPlus} label="Create Employee" active={activeKey === "create"} />
           </NavLink>
+           <NavLink to="/director/HrCredentials" className="w-full text-left">
+            <Item icon={FaUserPlus} label="Create Hr Credentials" active={activeKey === "create"} />
+          </NavLink>
           <Item icon={FaUsers} label="Manage Team" active={activeKey === "team"} />
           <Title>Reports</Title>
           <Item icon={FaChartBar} label="Performance" active={activeKey === "perf"} />
@@ -86,7 +89,9 @@ const Sidebar = ({
           <NavLink to="/hr/add-credentials" className="w-full text-left">
             <Item icon={FaUserPlus} label="Add Credentials" active={activeKey === "create"} />
           </NavLink>
+          <NavLink to="/hr/employee-records" className="w-full text-left">  
           <Item icon={FaUsers} label="Employee Records" active={activeKey === "team"} />
+          </NavLink>
         </>
       )}
 

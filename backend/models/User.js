@@ -3,10 +3,12 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 const UserSchema = new mongoose.Schema({
+  employeeId: { type: String, unique: true, required: true },
+  
   name: { type: String },
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
-  role: { type: String, enum: ['DIRECTOR', 'HR', 'PM', 'EMPLOYEE'], required: true },
+  role: { type: String, enum: ['DIRECTOR', 'HR', 'PM', 'Employee'], required: true },
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' } // for EMPLOYEE users
 }, { timestamps: true });
 

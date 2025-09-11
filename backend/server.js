@@ -12,7 +12,7 @@ import employeeRoutes from "./routes/employeeRoutes.js";
 
 // Models
 import Notification from "./models/Notification.js";
-
+import User from "./models/User.js";
 dotenv.config();
 await connectDB(); // ensure MongoDB connection before starting server
 
@@ -73,20 +73,29 @@ app.get("/api/fetchEmployees", async (_req, res) => {
   try {
     const notifications = await Notification.find().sort({ createdAt: -1 });
 
-    const employees = notifications.map((n) => ({
-      id: n._id,        // notification id as unique identifier
-      ...n.data,        // employee info stored in data
-      title: n.title,
-      body: n.body,
-      createdAt: n.createdAt,
-    }));
+ 
 
-    res.json(employees);
+    res.json(notifications);
   } catch (error) {
     console.error("Error fetching employees:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
+
+app.delete("/api/notificationDelete/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log("Backend received delete request for ID:", id); // 👈 add this
+    const deleted = await Notification.findByIdAndDelete(id);
+    if (!deleted) return res.status(404).json({ message: "Notification not found" });
+    res.json({ message: "Notification deleted" });
+  } catch (error) {
+    console.error("Delete error:", error);
+    res.status(500).json({ message: "Error deleting notification", error });
+  }
+});
+
+
 
 // ✅ Test route
 app.get("/test", (_req, res) => res.send("API is working"));
