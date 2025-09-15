@@ -68,6 +68,28 @@ app.get("/api/fetchnotifications", async (_req, res) => {
   }
 });
 
+app.get("/api/fetchHr", async(req,res) => {
+  try{
+      const Hr = await User.find({role : "HR"})
+      res.json(Hr);
+  }
+  catch(error){
+    console.error("Error fetching Hrs", error);
+    res.status(500).json({ message: "Server error" });
+  }
+})
+
+app.get("/api/GetHr/:id", async(req,res) => {
+  try{
+      const {id} = req.params;
+      const Hr = await User.findById(id);
+      res.json(Hr);
+  }
+  catch(error){
+    console.error("Error fetching Hrs", error);
+    res.status(500).json({ message: "Server error" });
+  }
+})
 // ✅ Fetch employee details from notifications.data
 app.get("/api/fetchEmployees", async (_req, res) => {
   try {

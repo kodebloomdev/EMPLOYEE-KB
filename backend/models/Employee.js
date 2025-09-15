@@ -9,12 +9,14 @@ const employeeSchema = new mongoose.Schema(
     
     role: {
       type: String,
-      enum: ["employee", "manager", "hr", "director"],
+      enum: ["employee", "project managers", "hr", "director"],
       default: "employee",
     },
     position: { type: String },
     department: { type: String },
     salary: { type: Number },
+    assignedHr:{type: mongoose.Schema.Types.ObjectId, ref: 'User'} || null ,
+    assignedPM:{type: mongoose.Schema.Types.ObjectId, ref: 'User'}|| null ,
     mobile: { type: String },
     status: { type: String, enum: ["Active", "InActive"], default: "Active" },
     photo: { type: String },

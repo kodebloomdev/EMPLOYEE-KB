@@ -92,6 +92,9 @@ const Sidebar = ({
           <NavLink to="/hr/employee-records" className="w-full text-left">  
           <Item icon={FaUsers} label="Employee Records" active={activeKey === "team"} />
           </NavLink>
+          <NavLink to="/hr/pm-records" className="w-full text-left">  
+          <Item icon={FaUsers} label="pm records" active={activeKey === "team"} />
+          </NavLink>
         </>
       )}
 

@@ -98,7 +98,7 @@ const Header = ({ toggleSidebar }) => {
             )}
           </button>
 
-          {showNotifications && (
+          {showNotifications &&  (
             <div className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg overflow-hidden z-50">
               <div className="p-3 bg-blue-900 text-white font-bold flex justify-between items-center">
                 <span>Notifications ({notificationCount})</span>

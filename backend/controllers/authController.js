@@ -1,6 +1,5 @@
 import User from "../models/User.js";
 import Employee from "../models/Employee.js";
-
 import bcrypt from "bcryptjs";
 
 export const signin = async (req, res) => {
@@ -17,11 +16,11 @@ export const signin = async (req, res) => {
 
     let isMatch = false;
 
-    // Case 1: If password looks like bcrypt hash in DB → compare with bcrypt
+    // Case 1: Password stored as bcrypt hash
     if (user.password.startsWith("$2a$") || user.password.startsWith("$2b$")) {
       isMatch = await bcrypt.compare(password, user.password);
     } else {
-      // Case 2: Stored as plain text → just compare directly
+      // Case 2: Stored in plain text (for testing)
       isMatch = user.password === password;
     }
 
@@ -36,23 +35,23 @@ export const signin = async (req, res) => {
       role: user.role,
       email: user.email,
     });
-
   } catch (error) {
     console.error("Signin error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
-// ✅ Save credentials without bcrypt
+
+// ✅ Save credentials without bcrypt (testing only)
 export const credentialsSent = async (req, res) => {
   try {
     const { id } = req.params; // employeeId from URL
-    const { email, password ,role} = req.body;
+    const { email, password, role } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password are required" });
     }
 
-    // Check if user already exists
+    // Check if user already exists for this employee
     const existingUser = await User.findOne({ employeeId: id });
     if (existingUser) {
       return res.status(400).json({ message: "Credentials already created for this employee" });
@@ -80,12 +79,25 @@ export const credentialsSent = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-export const employesAssigned = async (req, res) => {
+
+// ✅ Fetch all employees with linked Employee doc
+export const employeesAssigned = async (req, res) => {
   try {
-    const employees = await User.find({ role: 'Employee' }).populate('employee')  ;
+    const employees = await User.find({ role: "employee" }).populate("employee");
     res.json(employees);
   } catch (error) {
     console.error("Error fetching employees:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ✅ Fetch all Project Managers (PMs) from Users
+export const projectManagersAssigned = async (req, res) => {
+  try {
+    const pms = await Employee.find({ role: "project managers" });
+    res.json(pms);
+  } catch (error) {
+    console.error("Error fetching project managers:", error);
     res.status(500).json({ message: "Server error" });
   }
 };

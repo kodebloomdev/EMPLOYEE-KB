@@ -14,6 +14,7 @@ import Credentials from "./pages/hr/credentials";
 import HrCredentialsAdd from "./pages/director/HrCredentialsAdd";
 import AssignCredentials from "./pages/director/AssignCredentials";
 import EmployeeDetails from "./pages/hr/employeeDetails";
+import PmDetails from "./pages/hr/pmDetails";
 function App() {
   return (
     <Router>
@@ -94,6 +95,18 @@ function App() {
             </PrivateRoute>
           }
         />  
+          <Route 
+          path="/hr/pm-records"
+          element={
+            <PrivateRoute role="HR">
+              <Layout>
+                <PmDetails />
+              </Layout>
+            </PrivateRoute>
+          }
+        />  
+        
+                        
         <Route 
           path="/hr/credentials"
           element={

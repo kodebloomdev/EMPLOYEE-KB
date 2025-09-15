@@ -19,6 +19,7 @@ const EmployeeDetails = () => {
 
     fetchEmployees();
   }, []);
+  
 
   if (loading) return <p>Loading employees...</p>;
   if (employeeDetails.length === 0) return <p>No employees found.</p>;

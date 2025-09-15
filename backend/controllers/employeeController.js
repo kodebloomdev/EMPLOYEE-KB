@@ -1,23 +1,41 @@
 // backend/controllers/employeeController.js
 import Employee from "../models/Employee.js";
 import Notification from "../models/Notification.js";
+import User from "../models/User.js";
 
 // ✅ GET /api/employees - fetch all employees
 export const getEmployees = async (req, res) => {
   try {
-    const employees = await Employee.find().sort({ createdAt: -1 });
+    const employees = await Employee.find()
+      .populate("assignedHr", "name email") // ✅ show HR details instead of ObjectId
+      .sort({ createdAt: -1 });
+
     res.json(employees);
   } catch (error) {
     console.error("getEmployees error:", error);
     res.status(500).json({ message: "Error fetching employees" });
   }
 };
+export const getEmployeesByHr = async (req, res) => {
+  try {
 
+    const { hrId } = req.params; // coming from route /employees/hr/:hrId
+
+    const employees = await Employee.find({ assignedHr: hrId }).populate("assignedHr", "name email");
+
+    if (!employees || employees.length === 0) {
+      return res.status(404).json({ message: "No employees found for this HR" });
+    }
+
+    res.json(employees);
+  } catch (error) {
+    console.error("Error fetching employees by HR:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
 // ✅ POST /api/employees - create new employee
 export const createEmployee = async (req, res) => {
   try {
-    console.log("👉 Incoming employee payload:", req.body);
-
     const {
       employeeId,
       name,
@@ -30,9 +48,10 @@ export const createEmployee = async (req, res) => {
       mobile,
       status,
       photo,
+      assignedHr,
     } = req.body;
 
-    if (!name || !dob || !email ) {
+    if (!name || !dob || !email) {
       return res
         .status(400)
         .json({ message: "name, dob, and email are required" });
@@ -43,7 +62,6 @@ export const createEmployee = async (req, res) => {
       name: name.trim(),
       dob: dob ? new Date(dob) : null,
       email: email.toLowerCase().trim(),
-      
       role: role || "employee",
       position: position || "",
       department: department || "",
@@ -51,27 +69,27 @@ export const createEmployee = async (req, res) => {
       mobile: mobile || "",
       status: status || "Active",
       photo: photo || "",
+      assignedHr: assignedHr || null, // ✅ Save HR reference
     };
 
-    console.log("👉 Normalized payload:", payload);
-
     const created = await Employee.create(payload);
+
+    // ✅ Send notification
     try {
-  await Notification.create({
-    to: created._id, // send to the newly created employee
-    title: "New Employee Added",
-    body: `Employee ${name} has been added.`,
-    data: { employeeId, name, role, department, email, mobile, position, salary, status, dob, photo },
-  });
-  console.log("✅ Notification created");
-} catch (err) {
-  console.error("❌ Notification creation failed:", err);
-}
+      await Notification.create({
+        to: created._id,
+        title: "New Employee Added",
+        body: `Employee ${name} has been added.`,
+        data: payload,
+      });
+    } catch (err) {
+      console.error("❌ Notification creation failed:", err);
+    }
 
-    console.log("✅ Employee created:", created);
+    // ✅ Populate HR details in response
+    const populated = await created.populate("assignedHr", "name email");
 
-    res.status(201).json(created);
-    
+    res.status(201).json(populated);
   } catch (error) {
     console.error("❌ createEmployee error:", error);
     if (error?.code === 11000 && error?.keyPattern?.email) {
@@ -81,14 +99,11 @@ export const createEmployee = async (req, res) => {
   }
 };
 
-
 // ✅ PUT /api/employees/:id - update employee
 export const updateEmployee = async (req, res) => {
   try {
     const { id } = req.params;
     const update = { ...req.body };
-
-  
 
     // 🔹 Normalize
     if (update.email) update.email = update.email.toLowerCase().trim();
@@ -98,18 +113,16 @@ export const updateEmployee = async (req, res) => {
     const updated = await Employee.findByIdAndUpdate(id, update, {
       new: true,
       runValidators: true,
-    });
+    }).populate("assignedHr", "name email"); // ✅ return HR details
 
     if (!updated) return res.status(404).json({ message: "Employee not found" });
 
     res.json(updated);
   } catch (error) {
     console.error("updateEmployee error:", error);
-
     if (error?.code === 11000 && error?.keyPattern?.email) {
       return res.status(409).json({ message: "Email already exists" });
     }
-
     res.status(500).json({ message: "Error updating employee" });
   }
 };
@@ -128,3 +141,4 @@ export const deleteEmployee = async (req, res) => {
     res.status(500).json({ message: "Error deleting employee" });
   }
 };
+
